@@ -1,3 +1,12 @@
+# SPACE TO GET A NEW SUDOKU
+# CLICK TO ADD NUMBER
+# ENTER TO AUTOSOLVE
+# ESCAPE TO CLEAR BOARD
+
+
+
+
+
 import math
 import pygame
 from time import perf_counter
@@ -28,15 +37,13 @@ def main():
     pygame.display.set_caption("Sudoku")            
     win.fill(BACKGROUND_COLOR)
 
-    # Creating grid and populating with random puzzle                      
-    puzzle = get_puzzle()                          
-    populate_grid(puzzle)
+    # Creating grid and populating with random puzzle                                              
+    populate_grid()
     creategrid(win)
 
-    # Key events
+    # Key events  
     while True:
         for event in pygame.event.get():
-
             # User want to solve 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
@@ -49,6 +56,7 @@ def main():
                     creategrid(win)
             # User wants to insert number
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                print('Inserting Number')
                 pos = pygame.mouse.get_pos()
                 insert_number(win, pos)
 
@@ -64,16 +72,23 @@ def main():
                     # Refresh window
                     creategrid(win)
 
+            # Reset game
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    print(GRID)
+                    populate_grid()
+                    creategrid(win) 
+
             # user wants to quit game
             if event.type == pygame.QUIT:
                 print(GRID)
                 pygame.quit()
          
 # Fill grid with Sudoku from api      
-def populate_grid(puzzle):
+def populate_grid():
+    puzzle = get_puzzle()  
     print(f"Difficulty is {puzzle['difficulty']}")
     puzzle = puzzle["puzzle"]
-    print(puzzle)
     n = 0
     for y in range(9):
         for x in range(9):
@@ -81,9 +96,10 @@ def populate_grid(puzzle):
                 GRID[y][x] = int(puzzle[n])
             except:
                 GRID[y][x] = 0
-            print(f'{x, y} makes {puzzle[n]}')
             n += 1
+    print("Populated grid")
     return
+    
         
 
 # Lets user input values into the grid
@@ -108,7 +124,10 @@ def insert_number(win, pos):
                     GRID[y][x] = int(key)
                     # Display number 
                     creategrid(win)
+                    print(f'inserted {int(key)} into {x, y}')
                     return
+                else:
+                    print('Unvalid Key')
 
 
 
@@ -121,7 +140,7 @@ def display_number(win, x, y, number):
     win.blit(number, (x_visual, y_visual))
 
     pygame.display.update()
-    
+    return
 
 
 # Get square in grid based on x and y coordinates
@@ -158,7 +177,8 @@ def creategrid(win):
                 display_number(win, x, y, str(GRID[y][x]))
 
     pygame.display.update()
-   
+    print('Created grid')
+    return
 
 
 # Adapted from https://www.youtube.com/watch?v=eqUwSA0xI-s&ab_channel=TechWithTim

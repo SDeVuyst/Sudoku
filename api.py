@@ -10,7 +10,9 @@ def get_puzzle():
         'x-rapidapi-host': "sudoku-generator1.p.rapidapi.com",
         'x-rapidapi-key': "9488e43fecmsh355fccfff10f9cep1208f7jsn69bbc54b6c3c"
         }
-
-    response = requests.request("GET", url, headers=headers, params=querystring)
+    try:
+        response = requests.request("GET", url, headers=headers, params=querystring)
+    except:
+        raise Exception('No response...')
     data = response.json()
     return(data)
