@@ -1,7 +1,7 @@
 import math
 import pygame
 from time import perf_counter
-
+from api import get_puzzle
 # Constants
 WIDTH = 1000
 BACKGROUND_COLOR = (38, 38, 38)
@@ -26,9 +26,12 @@ def main():
     pygame.init()
     win = pygame.display.set_mode((WIDTH, WIDTH))  
     pygame.display.set_caption("Sudoku")            
-    win.fill(BACKGROUND_COLOR)                      
-    creategrid(win)                              
-    
+    win.fill(BACKGROUND_COLOR)
+
+    # Creating grid and populating with random puzzle                      
+    puzzle = get_puzzle()                          
+    populate_grid(puzzle)
+    creategrid(win)
 
     # Key events
     while True:
@@ -65,7 +68,23 @@ def main():
             if event.type == pygame.QUIT:
                 print(GRID)
                 pygame.quit()
-                
+         
+# Fill grid with Sudoku from api      
+def populate_grid(puzzle):
+    print(f"Difficulty is {puzzle['difficulty']}")
+    puzzle = puzzle["puzzle"]
+    print(puzzle)
+    n = 0
+    for y in range(9):
+        for x in range(9):
+            try:
+                GRID[y][x] = int(puzzle[n])
+            except:
+                GRID[y][x] = 0
+            print(f'{x, y} makes {puzzle[n]}')
+            n += 1
+    return
+        
 
 # Lets user input values into the grid
 def insert_number(win, pos):
